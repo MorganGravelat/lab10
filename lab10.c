@@ -12,29 +12,29 @@ struct Trie {
 
 // Inserts the word to the trie structure
 void insert(struct Trie *pTrie, const char *word) {
-    struct Trie *pCrawl = pTrie;
+    struct Trie *stepNode = pTrie;
     while (*word) {
         int index = *word - 'a';
-        if (!pCrawl->children[index]) {
-            pCrawl->children[index] = calloc(1, sizeof(struct Trie));
+        if (!stepNode->children[index]) {
+            stepNode->children[index] = calloc(1, sizeof(struct Trie));
         }
-        pCrawl = pCrawl->children[index];
+        stepNode = stepNode->children[index];
         word++;
     }
-    pCrawl->occurrences++;
+    stepNode->occurrences++;
 }
 
 // computes the number of occurances of the word
 int numberOfOccurances(struct Trie *pTrie, const char *word) {
-    struct Trie *pCrawl = pTrie;
+    struct Trie *stepNode = pTrie;
     while (*word) {
         int index = *word - 'a';
-        if (!pCrawl->children[index])
+        if (!stepNode->children[index])
             return 0;
-        pCrawl = pCrawl->children[index];
+        stepNode = stepNode->children[index];
         word++;
     }
-    return pCrawl->occurrences;
+    return stepNode->occurrences;
 }
 
 // deallocate the trie structure
@@ -73,7 +73,7 @@ int readDictionary(const char *filename, char ***pInWords) {
 
 int main(void) {
     char **inWords;
-    
+
     int numWords = readDictionary("dictionary.txt", &inWords);
     if (numWords < 0) {
         printf("Failed to read dictionary\n");
@@ -82,7 +82,7 @@ int main(void) {
     for (int i = 0; i < numWords; ++i) {
         printf("%s\n", inWords[i]);
     }
-    
+
     struct Trie *pTrie = createTrie();
     for (int i = 0; i < numWords; i++) {
         insert(pTrie, inWords[i]);
